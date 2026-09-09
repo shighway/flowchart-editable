@@ -211,6 +211,29 @@ def main():
     g0 = xml.rfind("<w:drawing>", 0, mt.start())
     g1 = xml.find("</w:drawing>", mt.start()) + len("</w:drawing>")
     removed = xml[g0:g1]
+
+    if "<wp:anchor" in removed:
+        # floating image: preserve the original anchor (position/wrap/size) and
+        # swap only the graphic content for the editable canvas
+        attrs = re.search(r"<wp:anchor([^>]*)>", removed).group(1)
+        def grab(pat, default=""):
+            m = re.search(pat, removed, re.S)
+            return m.group(0) if m else default
+        simple = grab(r"<wp:simplePos[^>]*/>")
+        posh = grab(r"<wp:positionH.*?</wp:positionH>")
+        posv = grab(r"<wp:positionV.*?</wp:positionV>")
+        extent = grab(r"<wp:extent[^>]*/>")
+        eff = grab(r"<wp:effectExtent[^>]*/>", '<wp:effectExtent l="0" t="0" r="0" b="0"/>')
+        wrap = grab(r"<wp:wrap(?:None|Square|Tight|Through|TopAndBottom)[^>]*/>",
+                    "<wp:wrapNone/>")
+        docpr = grab(r"<wp:docPr[^>]*/>", '<wp:docPr id="900001" name="Flowchart Canvas"/>')
+        relh = grab(r"<wp14:sizeRelH.*?</wp14:sizeRelH>")
+        relv = grab(r"<wp14:sizeRelV.*?</wp14:sizeRelV>")
+        graphic = frag[frag.find("<a:graphic"):frag.rfind("</a:graphic>") + len("</a:graphic>")]
+        frag = ('<w:drawing><wp:anchor%s>%s%s%s%s%s%s%s<wp:cNvGraphicFramePr/>%s%s%s'
+                '</wp:anchor></w:drawing>'
+                % (attrs, simple, posh, posv, extent, eff, wrap, docpr, graphic, relh, relv))
+
     xml = xml[:g0] + frag + xml[g1:]
 
     # docPr id must be unique in the document

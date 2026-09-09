@@ -61,3 +61,21 @@
   original PNG was produced by a different rasterizer, so pixel-identical text is not
   a realistic target. Font forensics (glyph width/serif tests) rarely beats just using
   the document's own UI font (Meiryo UI in KSW docs).
+
+## Floating charts (wp:anchor) — SOP-209 case, 2026-09
+
+- A flowchart image may be **floating (`wp:anchor`)**, not inline — especially in
+  bilingual docs where an EN inline chart and a JP floating chart sit side by side.
+  Replacing a floating drawing with an inline canvas reflows the whole document
+  (EOP: 18 → 20 pages).
+- fc_build.py now detects `wp:anchor` in the replaced drawing and rebuilds the canvas
+  **as an anchored drawing**, reusing the original anchor attributes, positionH/V,
+  extent, effectExtent, wrap element, docPr, and sizeRelH/V — only the graphic content
+  changes.
+- Bilingual EN+JP chart pairs: same topology, different text. Build the spec once from
+  the JP raster, clone it with EN texts, and run fc_build twice (each pass targets the
+  remaining raster by its own --match-extent).
+- Verify-gate note: replacing a raster whose fonts differ from Word's yields ~1–3%
+  residual page diff on the chart page. That is expected; the gate is a tripwire, not
+  an absolute — check the rendered page before consciously accepting an over-threshold
+  chart-page diff.
