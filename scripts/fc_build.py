@@ -134,7 +134,11 @@ def build_fragment(spec):
                x, y, cx, cy, lnw, lcol, tail))
 
     # freeform polylines
-    for i, pts in enumerate(spec.get("polylines", [])):
+    for i, entry in enumerate(spec.get("polylines", [])):
+        if isinstance(entry, dict):
+            pts = entry["pts"]; parr = entry.get("arrow", False)
+        else:
+            pts = entry; parr = False
         xs = [p[0] for p in pts]; ys = [p[1] for p in pts]
         mx, my = ex(min(xs)), ey(min(ys))
         w, h = ex(max(xs)) - mx, ey(max(ys)) - my
@@ -147,9 +151,10 @@ def build_fragment(spec):
             '<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/>'
             '<a:rect l="0" t="0" r="%d" b="%d"/>'
             '<a:pathLst><a:path w="%d" h="%d" fill="none">%s</a:path></a:pathLst></a:custGeom>'
-            '<a:noFill/><a:ln w="%d"><a:solidFill><a:srgbClr val="%s"/></a:solidFill></a:ln></wps:spPr>'
+            '<a:noFill/><a:ln w="%d"><a:solidFill><a:srgbClr val="%s"/></a:solidFill>%s</a:ln></wps:spPr>'
             '<wps:bodyPr/></wps:wsp>'
-            % (WPS_NS, next_id(), i, mx, my, w, h, w, h, w, h, nodes, lnw, lcol))
+            % (WPS_NS, next_id(), i, mx, my, w, h, w, h, w, h, nodes, lnw, lcol,
+               '<a:tailEnd type="triangle" w="med" len="med"/>' if parr else ''))
 
     cx_e = emu["cx"] if emu else None
     cy_e = emu["cy"] if emu else None
