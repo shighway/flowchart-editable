@@ -67,6 +67,12 @@ Checks: opens without repair dialog, page count unchanged, every page render dif
 in the folder where the original lives, which is what "置換して" means. Without
 `--deploy` it only reports PASS/FAIL.
 
+**Default behavior — deploy to every copy of the document.** If the same document
+exists in more than one place (e.g. a Downloads copy + the OneDrive project folder),
+replace ALL of them, each with its own `.flowchart-bak.docx` backup in its folder,
+without being asked. Verify once (staging vs one baseline), then copy the same
+verified staging file to every location.
+
 ## New flowcharts (editable from the start)
 
 Write the spec JSON directly (you already know the geometry — no detection step), then

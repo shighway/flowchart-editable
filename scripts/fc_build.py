@@ -85,11 +85,11 @@ def build_fragment(spec):
         sz = int(round(b.get("font_size_pt", fsz) * 2))
         ls = int(round(b.get("line_spacing_pt", lsp) * 20))
         lines = b.get("text", "").split("\n")
-        run_tpl = ('<w:r><w:rPr><w:rFonts w:ascii="%s" w:hAnsi="%s" w:cs="%s"/>'
+        run_tpl = ('<w:r><w:rPr><w:rFonts w:ascii="%s" w:hAnsi="%s" w:cs="%s" w:eastAsia="%s"/>'
                    '<w:b/><w:color w:val="%s"/><w:sz w:val="%d"/><w:szCs w:val="%d"/></w:rPr>'
                    '<w:t xml:space="preserve">%s</w:t></w:r>')
         br = '<w:r><w:br/></w:r>'
-        runs = br.join(run_tpl % (font, font, font, tc, sz, sz, esc(t)) for t in lines)
+        runs = br.join(run_tpl % (font, font, font, font, tc, sz, sz, esc(t)) for t in lines)
         parts.append(
             '<wps:wsp %s><wps:cNvPr id="%d" name="bx_%s"/><wps:cNvSpPr/>'
             '<wps:spPr><a:xfrm><a:off x="%d" y="%d"/><a:ext cx="%d" cy="%d"/></a:xfrm>'
