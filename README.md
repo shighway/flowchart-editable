@@ -1,3 +1,9 @@
+> **Note (2026-09):** this pipeline is now **bundled inside
+> [shighway/bilingual-docx-translation](https://github.com/shighway/bilingual-docx-translation)**
+> (`scripts/fc_*.py` + `references/flowchart-editable.md`). This repo remains as the
+> standalone/legacy version. Update flowcharts via the bilingual skill unless you only
+> need flowchart editing.
+
 # flowchart-editable
 
 A ZCode skill: replace flat (PNG/JPEG) flowchart images inside Word (.docx) documents
