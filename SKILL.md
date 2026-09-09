@@ -48,28 +48,28 @@ EOF
 The flowchart is usually the largest inline extent. Extract the matching media file
 (find `r:embed="rIdN"` in the same drawing, map via `word/_rels/document.xml.rels`).
 
-### 2. Build the spec JSON
+### 2. Auto-spec + texts overlay
 
 ```bash
 python fc_detect.py chart.png -o spec_draft.json --display-width-cm <cm>
 ```
 
-`--display-width-cm` = replaced image's `wp:extent cx / 360000`. The draft contains
-boxes, candidate line runs (`_segments`), the line color, and a font-size estimate.
+The draft is complete: boxes auto-named `c<col>_<row>` (columns left-to-right, rows
+top-down), routes auto-grouped into `connectors`/`polylines`, line color and font
+size estimated. After **reading the PNG once**:
+- write a texts overlay JSON `{"c01_r01": "...", "c01_r02": "..."}` - this is the
+  only authoring step; copy the original line breaks (`
+`)
+- sanity-check the auto-routing against the PNG; edit `connectors`/`polylines` in
+  the JSON only where they differ from the drawing
+- check arrowheads in the raster; the canvas omits them today (see gotchas)
+- bilingual rule from 2b applies to the texts: EN lines on top, JP lines below
 
-Then **Read the PNG visually** and finish the draft by hand:
-- transcribe every box `text` (`
-` = forced line break; copy the original line breaks)
-- **rename boxes by geometry (column, then row)** - the detector's scan order
-  interleaves columns, so wiring connectors "by index" connects the wrong boxes
-- group `_segments` using the PNG: runs between box-edge CENTERS -> attached
-  `connectors`; everything else (distributor rails, elbows, drops into a non-center
-  edge point, multi-bend routes) goes to `polylines`
-- set `px` = PNG size, `emu` = the replaced image's extent
-- style: start from the detected line color / font estimate, then verify visually;
-  KSW/KIX charts are typically Meiryo UI bold 5.5-6 pt, exact line spacing, white
-  on fill. fc_build sets `w:eastAsia` so Japanese text renders correctly.
+Build:
 
+```bash
+python fc_build.py spec_draft.json --texts texts.json --docx in.docx   --out staging.docx [--match-extent cx x cy] [--remove-media]
+```
 ### 2b. Flowchart in a bilingual SOP/MOP
 
 If the document is bilingual (EN + JP) but its flowchart is **single-language**

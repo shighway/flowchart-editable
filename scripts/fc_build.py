@@ -177,10 +177,16 @@ def main():
     ap.add_argument("--docx"); ap.add_argument("--out")
     ap.add_argument("--fragment")
     ap.add_argument("--match-extent", help="cx x cy of the image to replace, e.g. 7429500x3865197")
+    ap.add_argument("--texts", help="JSON {box_name: text} overlaid onto the spec's boxes")
     ap.add_argument("--remove-media", action="store_true",
                     help="drop the replaced image's rel + media entry (smaller file)")
     a = ap.parse_args()
     spec = json.load(open(a.spec, encoding="utf-8"))
+    if a.texts:
+        texts = json.load(open(a.texts, encoding="utf-8"))
+        for b in spec["boxes"]:
+            if b["name"] in texts:
+                b["text"] = texts[b["name"]]
 
     if a.fragment:
         frag, _ = build_fragment(spec)
