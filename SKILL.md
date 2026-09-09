@@ -62,16 +62,17 @@ python fc_verify.py in_staging.docx --baseline-docx in.docx --deploy in.docx
 ```
 
 Checks: opens without repair dialog, page count unchanged, every page render diff
-< 3%. On PASS with `--deploy`, the original is backed up next to itself
-(`in.docx.flowchart-bak.docx`) and overwritten **in place** — the replacement lands
-in the folder where the original lives, which is what "置換して" means. Without
-`--deploy` it only reports PASS/FAIL.
+< 3%. On PASS, `--deploy` backs up the target next to itself
+(`in.docx.flowchart-bak.docx`) and overwrites it **in place**. Without `--deploy`
+it only reports PASS/FAIL.
 
-**Default behavior — deploy to every copy of the document.** If the same document
-exists in more than one place (e.g. a Downloads copy + the OneDrive project folder),
-replace ALL of them, each with its own `.flowchart-bak.docx` backup in its folder,
-without being asked. Verify once (staging vs one baseline), then copy the same
-verified staging file to every location.
+**Confirmation gate (mandatory).** Never deploy without explicit user approval:
+1. after PASS, list the exact plan — every target file path that will be replaced and
+   every backup path that will be created (`*.flowchart-bak.docx`)
+2. ask the user to confirm (e.g. "このファイルを置換していいですか？")
+3. deploy only the approved paths. Never touch other copies, archives, or old drafts
+   on your own initiative — if the same document exists in several folders, show the
+   list and let the user pick.
 
 ## New flowcharts (editable from the start)
 
