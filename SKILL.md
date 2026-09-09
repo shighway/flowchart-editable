@@ -56,13 +56,26 @@ Then **Read the PNG visually** and finish the draft by hand:
   KSW/KIX charts are typically Meiryo UI bold 5.5-6 pt, exact line spacing, white
   on fill. fc_build sets `w:eastAsia` so Japanese text renders correctly.
 
-### 2b. Translated variant of a chart you already built
+### 2b. Flowchart in a bilingual SOP/MOP
 
-If a translated doc (e.g. `_JP_EN`) contains the same flowchart as a raster, **reuse
-the existing spec**: copy it, replace only the box `text` fields with the translated
-strings (match the language the raster shows), and swap it into that document at its
-own extent (`--match-extent`). Same topology, zero re-tracing.
+If the document is bilingual (EN + JP) but its flowchart is **single-language**
+(EN-only or JP-only raster), the swapped canvas must be **bilingual: English on
+top, Japanese below in every box**:
 
+```
+"text": "Confirm UV Relay status,
+UPS normally discharging
+UVリレー状態確認、
+UPS通常放电確認"
+```
+
+- translate the box labels following the document's own terminology
+- reuse geometry from whichever single-language spec exists (EN or JP) - one build
+  serves the bilingual deliverable (`--match-extent` = that document's extent)
+- bilingual text roughly doubles the content: if it overflows a box, reduce font
+  size (e.g. 6 -> 5 pt) and/or line spacing rather than resizing boxes
+- if the document has BOTH an EN chart and a JP chart side by side, keep them as
+  two separate single-language canvases (one per language), each editable
 ### 3.### 3. Build + swap (staging copy — never touch the original yet)
 
 ```bash

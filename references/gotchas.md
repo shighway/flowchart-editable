@@ -79,3 +79,11 @@
   residual page diff on the chart page. That is expected; the gate is a tripwire, not
   an absolute — check the rendered page before consciously accepting an over-threshold
   chart-page diff.
+
+## Bilingual box text (EN top / JP bottom)
+
+- Doubling text per box overflows quickly: drop font 1 pt and/or tighten exact line
+  spacing before touching box geometry. Check the rendered page for clipped lines -
+  Word clips silently inside shapes when `noAutofit` is set.
+- Follow the document's own EN-JP terminology for label translation; the body text of
+  a bilingual doc is the terminology source of truth.
