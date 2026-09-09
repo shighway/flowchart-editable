@@ -37,19 +37,33 @@ The flowchart is usually the largest inline extent. Extract the matching media f
 ### 2. Build the spec JSON
 
 ```bash
-python fc_detect.py chart.png -o spec_draft.json
+python fc_detect.py chart.png -o spec_draft.json --display-width-cm <cm>
 ```
 
+`--display-width-cm` = replaced image's `wp:extent cx / 360000`. The draft contains
+boxes, candidate line runs (`_segments`), the line color, and a font-size estimate.
+
 Then **Read the PNG visually** and finish the draft by hand:
-- transcribe every box `text` (`\n` = forced line break; copy the original line breaks)
-- trace connectors: attached straight connectors only where both endpoints hit an
-  edge CENTER of a box; everything else (distributor rails, drops into a non-center
+- transcribe every box `text` (`
+` = forced line break; copy the original line breaks)
+- **rename boxes by geometry (column, then row)** - the detector's scan order
+  interleaves columns, so wiring connectors "by index" connects the wrong boxes
+- group `_segments` using the PNG: runs between box-edge CENTERS -> attached
+  `connectors`; everything else (distributor rails, elbows, drops into a non-center
   edge point, multi-bend routes) goes to `polylines`
 - set `px` = PNG size, `emu` = the replaced image's extent
-- estimate font size from text-block height (detect script guesses); KSW/KIX charts
-  are typically Meiryo UI bold 5.5–6 pt, exact line spacing, white on fill
+- style: start from the detected line color / font estimate, then verify visually;
+  KSW/KIX charts are typically Meiryo UI bold 5.5-6 pt, exact line spacing, white
+  on fill. fc_build sets `w:eastAsia` so Japanese text renders correctly.
 
-### 3. Build + swap (staging copy — never touch the original yet)
+### 2b. Translated variant of a chart you already built
+
+If a translated doc (e.g. `_JP_EN`) contains the same flowchart as a raster, **reuse
+the existing spec**: copy it, replace only the box `text` fields with the translated
+strings (match the language the raster shows), and swap it into that document at its
+own extent (`--match-extent`). Same topology, zero re-tracing.
+
+### 3.### 3. Build + swap (staging copy — never touch the original yet)
 
 ```bash
 python fc_build.py spec.json --docx in.docx --out in_staging.docx --remove-media
