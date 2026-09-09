@@ -91,6 +91,17 @@ it only reports PASS/FAIL.
    overwrite it - write the intermediate state to `.flowchart-bak2.docx` so the backup
    chain preserves every generation.
 
+**Location mismatch = hands off.** A file whose project doesn't match its folder
+(e.g. an EOP-101 file sitting inside the EOP-102 folder) is a misplaced leftover:
+flag it to the user, never write to it, never put backups there. This includes
+"helpfully" converting it - deploy only where the user confirmed.
+
+**Nothing user-visible ever gets deleted.** Backups stay until the user says
+otherwise. If a change must be reverted, restore the backup content in place and
+remove only the extra backup file AFTER the restore is verified (zip integrity +
+size), leaving the folder exactly as found. Report the restore with byte-level
+evidence.
+
 ## New flowcharts (editable from the start)
 
 Write the spec JSON directly (you already know the geometry — no detection step), then
