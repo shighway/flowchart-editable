@@ -33,6 +33,13 @@ scope - already editable). The raster list IS the work list; after finishing,
 re-run the scan and require **"raster flowcharts remaining: 0"** as the
 completeness proof.
 
+**Confirmation comes BEFORE the work.** Right after the scan, present the full plan -
+every file that will be swapped, every backup path that will be created, the expected
+box text language (EN / JP / bilingual) - and get explicit approval. Do not extract
+charts, build, or write anything before approval. Once approved: run steps 1-4
+without further asking, and deploy automatically on PASS. Only stop mid-way if
+verification fails (report, do not deploy, re-confirm a revised plan).
+
 ### 1. Locate the flowchart image in the docx
 
 ```bash
@@ -107,13 +114,9 @@ Checks: opens without repair dialog, page count unchanged, every page render dif
 (`in.docx.flowchart-bak.docx`) and overwrites it **in place**. Without `--deploy`
 it only reports PASS/FAIL.
 
-**Confirmation gate (mandatory).** Never deploy without explicit user approval:
-1. after PASS, list the exact plan — every target file path that will be replaced and
-   every backup path that will be created (`*.flowchart-bak.docx`)
-2. ask the user to confirm (e.g. "このファイルを置換していいですか？")
-3. deploy only the approved paths. Never touch other copies, archives, or old drafts
-   on your own initiative — if the same document exists in several folders, show the
-   list and let the user pick.
+Deployment here was already approved in the pre-work confirmation (Step 0) - no
+second confirmation is needed on PASS. If verification FAILS: nothing is deployed;
+report the failure, fix, and re-confirm only if the plan itself changed.
    If a `.flowchart-bak.docx` already exists at the target (a previous swap), do NOT
    overwrite it - write the intermediate state to `.flowchart-bak2.docx` so the backup
    chain preserves every generation.
