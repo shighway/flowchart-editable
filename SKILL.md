@@ -87,6 +87,9 @@ it only reports PASS/FAIL.
 3. deploy only the approved paths. Never touch other copies, archives, or old drafts
    on your own initiative — if the same document exists in several folders, show the
    list and let the user pick.
+   If a `.flowchart-bak.docx` already exists at the target (a previous swap), do NOT
+   overwrite it - write the intermediate state to `.flowchart-bak2.docx` so the backup
+   chain preserves every generation.
 
 ## New flowcharts (editable from the start)
 
