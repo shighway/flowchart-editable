@@ -17,7 +17,21 @@ Goal: the client can edit box text, colors, and move boxes in Word itself, with 
 lines following. Result replaces the old flat PNG 1:1 — same page, same table cell,
 same EMU extent, no reflow anywhere.
 
-## Pipeline (4 steps)
+## Pipeline (5 steps)
+
+### 0. Scan the scope (leak-proof work list)
+
+```bash
+python fc_scan.py "<folder>"           # recursive; archives skipped
+python fc_scan.py "<folder>" --rasters-only
+```
+
+Only drawings near a **"Flowchart:"** label are flowcharts; photos/figures/other
+charts are out of scope by design and are never touched. The scan classifies each
+labeled drawing as `raster` (needs swap), `canvas` (done), or `SmartArt` (out of
+scope - already editable). The raster list IS the work list; after finishing,
+re-run the scan and require **"raster flowcharts remaining: 0"** as the
+completeness proof.
 
 ### 1. Locate the flowchart image in the docx
 
