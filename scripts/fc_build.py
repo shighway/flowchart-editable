@@ -120,16 +120,18 @@ def build_fragment(spec):
         (ax, ay) = SITES[c["sa"]](A); (bx, by) = SITES[c["sb"]](B)
         x, y = ex(min(ax, bx)), ey(min(ay, by))
         cx, cy = ex(max(ax, bx)) - x, ey(max(ay, by)) - y
+        tail = ('<a:tailEnd type="triangle" w="med" len="med"/>'
+                if c.get("arrow", spec.get("arrowheads", False)) else "")
         parts.append(
             '<wps:wsp %s><wps:cNvPr id="%d" name="cxn_%02d"/>'
-            '<wps:cNvCnPr><a:stCxn id="%d" idx="%d"/><a:endCxn id="%d" idx="%d"/></wps:cNvCnPr>'
+            '<wps:cNvCnPr><a:stCxn id="%s" idx="%d"/><a:endCxn id="%s" idx="%d"/></wps:cNvCnPr>'
             '<wps:spPr><a:xfrm><a:off x="%d" y="%d"/><a:ext cx="%d" cy="%d"/></a:xfrm>'
             '<a:prstGeom prst="straightConnector1"><a:avLst/></a:prstGeom>'
-            '<a:ln w="%d"><a:solidFill><a:srgbClr val="%s"/></a:solidFill></a:ln></wps:spPr>'
+            '<a:ln w="%d"><a:solidFill><a:srgbClr val="%s"/></a:solidFill>%s</a:ln></wps:spPr>'
             '<wps:bodyPr/></wps:wsp>'
             % (WPS_NS, box_xml_id[c["a"]] + 500 + i, i,
                box_xml_id[c["a"]], IDX[c["sa"]], box_xml_id[c["b"]], IDX[c["sb"]],
-               x, y, cx, cy, lnw, lcol))
+               x, y, cx, cy, lnw, lcol, tail))
 
     # freeform polylines
     for i, pts in enumerate(spec.get("polylines", [])):

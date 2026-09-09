@@ -94,7 +94,8 @@
   node clustering (6 px), then Euler path decomposition; paths with both ends on box
   edge centers and a single straight run become attached connectors, everything else
   becomes polylines. Validate with a quick visual against the PNG.
-- Arrowheads in the source raster are not reproduced yet. If a client needs them,
-  add `<a:tailEnd type="triangle"/>` inside the connector's `<a:ln>` (fc_build change).
+- Arrowheads: per-connector `"arrow": true`, per-polyline `{"pts": ..., "arrow": true}`,
+  or spec-level `"arrowheads": true` (all connectors). Rendered as a triangle
+  `<a:tailEnd type="triangle"/>` at the target end.
 - Font-size estimate is a heuristic (min text-block height x 1.05); treat it as a
   starting point and confirm on the rendered page.
